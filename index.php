@@ -35,7 +35,7 @@
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);			
 
-		<?php
+		<?php // Bisschen PHP, um die Daten aus der CSV zu lesen
 				
 			$url='https://docs.google.com/spreadsheet/pub?key=0Aok51X-ckHMXdFBRNXg2bDBadXpSc25NWE9RREhTRUE&single=true&gid=0&output=csv';
 			$lines=file($url); // liest Datei in das Array $lines
@@ -46,9 +46,9 @@
 				
 				if($lat!='' AND $lon!='' ){ // Wenn kein Längengrad und Breitengrad angegeben wird, nehm die Adresse
 					$lon=trim($lon); // mögliche Zeilenumbrüche werden weggeschnitten
-					echo "koordinaten($lat,$lon,'$info');";
+					echo "koordinaten($lat,$lon,'$info')\n;";
 				}else{
-					echo "adresse('$adresse','$info');";
+					echo "adresse('$adresse','$info');\n";
 				}
 			}
 		?>
