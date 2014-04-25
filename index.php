@@ -4,19 +4,8 @@
     <title>Open Data</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
-    <style>
-      html, body, #map_canvas {
-        margin: 0;
-        padding: 0;
-       
-      }	  
-	  #map_canvas {
-        margin: 50px auto;
-        padding: 0;
-        height: 700px;
-		width:950px;		
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="css/reset.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     <script>
       var map;
