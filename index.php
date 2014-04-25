@@ -27,11 +27,14 @@
         var mapOptions = {
           zoom: 11, // Zoomlevel
           center: new google.maps.LatLng(52.520007,13.404954), // Kartenmittelpunkt
-          mapTypeId: google.maps.MapTypeId.TERRAIN // zeigt physische Kartenkacheln, die auf Geländeinformationen basieren
+          mapTypeId: google.maps.MapTypeId.ROADMAP // zeigt die Standard-Straßenkartenansicht
+          // mapTypeId: google.maps.MapTypeId.SATELLITE // zeigt Google Earth-Satellitenbilder.
+          // mapTypeId: google.maps.MapTypeId.HYBRID //  zeigt eine Mischung aus der normalen und der Satellitenansicht.
+          // mapTypeId: google.maps.MapTypeId.TERRAIN // zeigt physische Kartenkacheln, die auf Geländeinformationen basieren
         };
         map = new google.maps.Map(document.getElementById('map_canvas'),
             mapOptions);			
-		
+
 		<?php
 				
 			$url='https://docs.google.com/spreadsheet/pub?key=0Aok51X-ckHMXdFBRNXg2bDBadXpSc25NWE9RREhTRUE&single=true&gid=0&output=csv';
@@ -43,29 +46,31 @@
 				
 				if($lat!='' AND $lon!='' ){ // Wenn kein Längengrad und Breitengrad angegeben wird, nehm die Adresse
 					$lon=trim($lon); // mögliche Zeilenumbrüche werden weggeschnitten
-					echo "koordinaten($lat,$lon,'$info');\n";
+					echo "koordinaten($lat,$lon,'$info');";
 				}else{
-					echo "adresse('$adresse','$info');\n";
+					echo "adresse('$adresse','$info');";
 				}
 			}
 		?>
-		
+
 		function koordinaten(lat,lon,info){
-				var marker = new google.maps.Marker({
-					map: map,
-					position:new google.maps.LatLng(lat,lon)
-				});
-				var infowindow = new google.maps.InfoWindow({
-					content: info
-				});
-				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.open(marker.get('map'), marker);
-				});
+			// console.log(lat, lon, info);
+			var marker = new google.maps.Marker({
+				map: map,
+				position:new google.maps.LatLng(lat,lon)
+			});
+			var infowindow = new google.maps.InfoWindow({
+				content: info
+			});
+			google.maps.event.addListener(marker, 'click', function() {
+				infowindow.open(marker.get('map'), marker);
+			});
 		}
 		
 		function adresse(ort,info){
+			// console.log(ort,info);
 			geocoder.geocode( { 'address': ort}, function(results, status) {
-				if (status == google.maps.GeocoderStatus.OK) {
+				if (status === google.maps.GeocoderStatus.OK) {
 
 					var marker = new google.maps.Marker({
 						map: map,
