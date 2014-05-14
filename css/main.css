@@ -1,11 +1,15 @@
-html, body, #map_canvas {
-        margin: 0;
-        padding: 0;
-       
-      }	  
-	  #map_canvas {
-        margin: 50px auto;
-        padding: 0;
-        height: 700px;
-		width:950px;		
-      }
+html, body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+#map {
+	height: 100%;
+	width: 100%;
+}
+
+.nav-elem{
+	margin: 1em;
+	float: right;
+}
