@@ -9,6 +9,12 @@ html, body {
 	width: 100%;
 }
 
+#infopanel {
+	background-color: #fff;
+	width: 2%;
+	height: 100%;
+}
+
 .nav-elem{
 	margin: 1em;
 	float: right;

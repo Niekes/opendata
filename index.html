@@ -9,15 +9,21 @@
 	</head>
 
 	<body>
-		<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+		<div class="navbar navbar-fixed-top" role="navigation">
 			<div class="nav-elem">
-				<input type="text" placeholder="What?">
-				<input type="text" placeholder="Where?">
+				<select id="select">
+					<option>Berlin - Mitte</option>
+					<option>Berlin - Friedrichshain</option>
+					<option>Berlin - Spandau</option>
+					<option>Berlin - Lichtenberg</option>
+					<option>Berlin - Marzahn</option>
+					<option>Berlin - Charlottenburg</option>
+				</select>
 			</div>
 		</div>
 		
 		<section id="map"></section>
-
+		<div id="infopanel">Panel</div>
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCzieVh2_sb-DScaGGzNCvUddUa3Ys9x8A&sensor=false"></script>
