@@ -7,11 +7,15 @@ html, body {
 #map {
 	height: 100%;
 	width: 100%;
+	z-index: 0;
 }
 
 #infopanel {
-	background-color: #fff;
-	width: 2%;
+	position: absolute;
+	right: 0;
+	z-index: 1;
+	background-color: red;
+	width: 10%;
 	height: 100%;
 }
 

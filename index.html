@@ -9,21 +9,24 @@
 	</head>
 
 	<body>
+	
 		<div class="navbar navbar-fixed-top" role="navigation">
 			<div class="nav-elem">
-				<select id="select">
-					<option>Berlin - Mitte</option>
+				<select id="select" onchange="centerMap(this)">
+					<option selected>Berlin - Mitte</option>
 					<option>Berlin - Friedrichshain</option>
-					<option>Berlin - Spandau</option>
-					<option>Berlin - Lichtenberg</option>
+					<option>Berlin - Treptow-Köpenick</option>
 					<option>Berlin - Marzahn</option>
+					<option>Berlin - Spandau</option>
 					<option>Berlin - Charlottenburg</option>
+					<option>Dunkel-Deutschland</option>
 				</select>
 			</div>
 		</div>
-		
+
 		<section id="map"></section>
-		<div id="infopanel">Panel</div>
+	
+
 		<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
 		<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCzieVh2_sb-DScaGGzNCvUddUa3Ys9x8A&sensor=false"></script>
