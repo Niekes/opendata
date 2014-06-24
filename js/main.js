@@ -1,10 +1,7 @@
 var map;
 
 //Arrays holding the airports
-var heliports = new Array();
-var small_airports = new Array();
-var medium_airports  = new Array();
-var large_airports  = new Array();
+var airports = new Array();
 
 //Array holding the associated Markers
 var markers = new Array();
@@ -12,7 +9,7 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 8,
+		zoom: 5,
 		center: new google.maps.LatLng(52,13),
 		disableDefaultUI: true
 	});
@@ -36,16 +33,7 @@ function setupData() {
 		success: function(result) {
 			//For each airport...
 			$.each(result, function(key, res) {
-				//Create a new entry into the matching array - its id as index
-				if(res.type == "heliport") {
-					heliports[res.id] = res;
-				} else if(res.type == "small_airport") {
-					small_airports[res.id] = res;
-				} else if(res.type == "medium_airport") {
-					medium_airports[res.id] = res;
-				} else 
-					large_airports[res.id] = res;
-
+				airports[res.id] = res;
 				//Create a new markers in the markers array - id of this airport as index
 				markers[res.id] = 
 					new google.maps.Marker({
@@ -55,7 +43,7 @@ function setupData() {
 					});
 
 				google.maps.event.addListener(markers[res.id], "click", function() {
-					console.log("Click");
+					console.log(airports[this.airport_id]);
 				});
 
 			});
@@ -69,15 +57,12 @@ function setupData() {
 function setMarkers(type) {
 	$("#loader").css("display", "block");
 
-	var arr;
-
-	if(type == "heliport") arr = heliports;
-	else if(type == "small_airport") arr = small_airports;
-	else if(type == "medium_airport") arr = medium_airports;
-	else arr = large_airports;
-
-	for(var i = 0; i < arr.length; i++) {
-		if(arr[i]) markers[arr[i].id].setMap(map);
+	for(var i = 0; i < airports.length; i++) {
+		if(airports[i]) {
+			if(airports[i].type == type) {
+				markers[i].setMap(map);
+			} else markers[i].setMap(null);
+		} 
 	} 
 
 	$("#loader").css("display", "none");
