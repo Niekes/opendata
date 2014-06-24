@@ -17,11 +17,19 @@
 	      		<ul class="nav navbar-nav">
 				  <li class="dropdown">
 				    <a class="dropdown-toggle" data-toggle="dropdown">Settings</a>
-				    <ul class="dropdown-menu">
-				    	<li onclick="setMarkers('heliport')"><a>Heliport</a></li>
-				    	<li onclick="setMarkers('small_airport')"><a>Small Airport</a></li>
-				    	<li onclick="setMarkers('medium_airport')"><a>Medium Airport</a></li>
-				    	<li class="active" onclick="setMarkers('large_airport')"><a>Large Airport</a></li>
+				    <ul class="dropdown-menu" id="dropdown">
+				    	<li value="heliport" onclick="setMarkers('heliport')">
+				    		<a>Heliport</a>
+				    	</li>
+				    	<li value="small_airport" onclick="setMarkers('small_airport')">
+				    		<a>Small Airport</a>
+				    	</li>
+				    	<li value="medium_airport" onclick="setMarkers('medium_airport')">
+				    		<a>Medium Airport</a>
+				    	</li>
+				    	<li value="large_airport" class="active" onclick="setMarkers('large_airport')">
+				    		<a>Large Airport</a>
+				    	</li>
 				    </ul>
 				  </li>
 				  <li><a id="loader"><img src="./res/ajax-loader.gif"></a></li>
