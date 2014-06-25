@@ -25,7 +25,7 @@ $(function() {
 			
 		} 
 	});
-});// Test
+});
 
 //Fills json data into two arrays
 function setupData() {
@@ -69,7 +69,7 @@ function setMarkers(type) {
 				markers[i].setMap(map);
 			} else markers[i].setMap(null);
 		} 
-	} // Test
+	}
 
 	$("#loader").css("display", "none");
 }
