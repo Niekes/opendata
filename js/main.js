@@ -46,6 +46,7 @@ function setupData() {
 
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					console.log(airports[this.airport_id]);
+
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
@@ -54,6 +55,7 @@ function setupData() {
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
+		setMarkers('large_airport');
 		setupHeatMap();
 	});
 };
