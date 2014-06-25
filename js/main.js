@@ -11,7 +11,7 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 2,
+		zoom: 3,
 		center: new google.maps.LatLng(52,13),
 		disableDefaultUI: false
 	});
