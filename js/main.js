@@ -1,4 +1,6 @@
 var map;
+var heatmap;
+var positions = new Array();
 
 //Arrays holding the airports
 var airports = new Array();
@@ -9,7 +11,7 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 5,
+		zoom: 2,
 		center: new google.maps.LatLng(52,13),
 		disableDefaultUI: true
 	});
@@ -23,7 +25,6 @@ $(function() {
 			
 		} 
 	});
-
 });
 
 //Fills json data into two arrays
@@ -33,6 +34,7 @@ function setupData() {
 		success: function(result) {
 			//For each airport...
 			$.each(result, function(key, res) {
+				//Creata a new entry in the airports array - its id as index
 				airports[res.id] = res;
 				//Create a new markers in the markers array - id of this airport as index
 				markers[res.id] = 
@@ -46,11 +48,13 @@ function setupData() {
 					console.log(airports[this.airport_id]);
 				});
 
+				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
+
 			});
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
-		setMarkers("large_airport");
+		setupHeatMap();
 	});
 };
 
@@ -66,4 +70,12 @@ function setMarkers(type) {
 	} 
 
 	$("#loader").css("display", "none");
+}
+
+function setupHeatMap() {
+	heatmap = new google.maps.visualization.HeatmapLayer({
+    	data: new google.maps.MVCArray(positions)
+  	});
+
+	heatmap.setMap(map);
 }
