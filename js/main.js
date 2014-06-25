@@ -12,7 +12,7 @@ var markers = new Array();
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 3,
-		center: new google.maps.LatLng(52,13),
+		center: new google.maps.LatLng(52,13), // Hier macht Stefan das mit der GeoLocation
 		disableDefaultUI: false
 	});
 
@@ -36,7 +36,7 @@ function setupData() {
 			$.each(result, function(key, res) {
 				//Creata a new entry in the airports array - its id as index
 				airports[res.id] = res;
-				//Create a new markers in the markers array - id of this airport as index // Hier entstehen die Marker
+				//Create a new markers in the markers array - id of this airport as index
 				markers[res.id] = 
 					new google.maps.Marker({
 						position: new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
