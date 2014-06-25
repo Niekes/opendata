@@ -11,9 +11,9 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 2,
-		center: new google.maps.LatLng(52,13),
-		disableDefaultUI: true
+		zoom: 3,
+		center: new google.maps.LatLng(52,13), // Hier macht Stefan das mit der GeoLocation
+		disableDefaultUI: false
 	});
 
 	//Fill arrays
@@ -46,6 +46,7 @@ function setupData() {
 
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					console.log(airports[this.airport_id]);
+
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
@@ -54,6 +55,7 @@ function setupData() {
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
+		setMarkers('large_airport');
 		setupHeatMap();
 	});
 };
@@ -67,7 +69,7 @@ function setMarkers(type) {
 				markers[i].setMap(map);
 			} else markers[i].setMap(null);
 		} 
-	} 
+	}
 
 	$("#loader").css("display", "none");
 }
