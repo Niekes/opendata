@@ -57,6 +57,7 @@ function setupData() {
 		$("#loader").css("display", "none");
 		setMarkers('large_airport');
 		setupHeatMap();
+		setupHeatMap();
 	});
 };
 
