@@ -36,7 +36,7 @@ function setupData() {
 			$.each(result, function(key, res) {
 				//Creata a new entry in the airports array - its id as index
 				airports[res.id] = res;
-				//Create a new markers in the markers array - id of this airport as index
+				//Create a new markers in the markers array - id of this airport as index // Hier entstehen die Marker
 				markers[res.id] = 
 					new google.maps.Marker({
 						position: new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
