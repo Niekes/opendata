@@ -13,7 +13,7 @@ $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 2,
 		center: new google.maps.LatLng(52,13),
-		disableDefaultUI: true
+		disableDefaultUI: false
 	});
 
 	//Fill arrays
