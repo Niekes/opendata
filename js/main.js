@@ -31,12 +31,16 @@ $(function() {
 function setupData() {
 	$.ajax({
 		url: "./res/airports.json",
+		"type":"GET",
+        "dataType":"json",
+        "contentType":"application/json",
 		success: function(result) {
-			//For each airport...
-			$.each(result, function(key, res) {
-				//Creata a new entry in the airports array - its id as index
+
+			console.log(result[0]);
+
+
+			$.each(result, function (key, res) {
 				airports[res.id] = res;
-				//Create a new markers in the markers array - id of this airport as index
 				markers[res.id] = 
 					new google.maps.Marker({
 						position: new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
