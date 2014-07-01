@@ -22,7 +22,7 @@ $(function() {
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
 		if(map.getZoom() >= 8) {
-			
+			//Change map depending on zoom level
 		} 
 	});
 });
