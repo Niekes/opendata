@@ -11,10 +11,30 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 3,
+		zoom: 8,
 		center: new google.maps.LatLng(52,13), // Hier macht Stefan das mit der GeoLocation
 		disableDefaultUI: false
 	});
+
+	if(navigator.geolocation) {
+    	navigator.geolocation.getCurrentPosition(function(position) {
+      	var pos = new google.maps.LatLng(position.coords.latitude,
+        position.coords.longitude);
+
+      // 	var infowindow = new google.maps.InfoWindow({
+      //   map: map,
+      //   position: pos,
+      //   content: 'Du bist hier'
+      // });
+
+      map.setCenter(pos);
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
 
 	//Fill arrays
 	setupData();
@@ -35,9 +55,6 @@ function setupData() {
         "dataType":"json",
         "contentType":"application/json",
 		success: function(result) {
-
-			console.log(result[0]);
-
 
 			$.each(result, function (key, res) {
 				airports[res.id] = res;
