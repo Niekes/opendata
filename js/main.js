@@ -12,29 +12,20 @@ var markers = new Array();
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 7,
-		center: new google.maps.LatLng(52,13), // Hier macht Stefan das mit der GeoLocation
+		center: new google.maps.LatLng(52,13),
 		disableDefaultUI: false
 	});
 
 	if(navigator.geolocation) {
     	navigator.geolocation.getCurrentPosition(function(position) {
-      	var pos = new google.maps.LatLng(position.coords.latitude,
-        position.coords.longitude);
-
-      // 	var infowindow = new google.maps.InfoWindow({
-      //   map: map,
-      //   position: pos,
-      //   content: 'Du bist hier'
-      // });
-
-      map.setCenter(pos);
-    }, function() {
-      handleNoGeolocation(true);
-    });
-  } else {
-    // Browser doesn't support Geolocation
-    handleNoGeolocation(false);
-  }
+      	var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      	map.setCenter(pos);
+    	}, function() {
+      		handleNoGeolocation(true);
+    	});
+  	}else{
+    	console.log('Doesnt Works');
+  	}
 
 	//Fill arrays
 	setupData();
@@ -64,9 +55,16 @@ function setupData() {
 						airport_id: res.id,
 						map: null
 					});
+				var contentString = '<strong>Airport: </strong>'airports[res.id].name + ' in ' + airports[res.id].municipality;
+
+				var infowindow = new google.maps.InfoWindow({
+      				content: contentString,
+      				// content: markers[res.id].name;
+  				});
 
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					console.log(airports[this.airport_id]);
+					infowindow.open(map, markers[res.id]);
 
 				});
 
