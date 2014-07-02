@@ -55,7 +55,7 @@ function setupData() {
 						airport_id: res.id,
 						map: null
 					});
-				var contentString = '<strong>Airport: </strong>'airports[res.id].name + ' in ' + airports[res.id].municipality;
+				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + ' in ' + airports[res.id].municipality;
 
 				var infowindow = new google.maps.InfoWindow({
       				content: contentString,
