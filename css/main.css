@@ -29,10 +29,10 @@ html, body {
 	margin-right: 10px;
 }
 
-.advanced_search_input {
-	display: block;
-}
-
 .advanced_search_input + .advanced_search_input {
 	margin-top: 20px;
+}
+
+.advanced_search_input input, select {
+	margin-left: 10px;
 }
