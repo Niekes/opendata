@@ -11,7 +11,7 @@ var markers = new Array();
 //When document is ready
 $(function() {
 	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 8,
+		zoom: 7,
 		center: new google.maps.LatLng(52,13), // Hier macht Stefan das mit der GeoLocation
 		disableDefaultUI: false
 	});
