@@ -9,6 +9,33 @@
 	</head>
 
 	<body>
+		
+		<!-- Search Modal -->
+		<div class="modal fade" id="advancedSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Advanced search</h4>
+		      </div>
+		      <div class="modal-body">
+		        <div class="advanced_search_input">Continent<input></div>
+		        <div class="advanced_search_input">Country<select>
+		        			<option>Bla</option>
+		        			<option>Blupp</option>
+		        			<option>Hu</option>
+		        			<option>Hi</option>
+		    		   </select></div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		        <button type="button" class="btn btn-primary">Search</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+
 		<nav class="navbar navbar-default" role="navigation">
    			<div class="navbar-header">
       			<a class="navbar-brand">Airports</a>
@@ -33,6 +60,14 @@
 				    </ul>
 				  </li>
 				  <li><a id="loader"><img src="./res/ajax-loader.gif"></a></li>
+
+				  <li id="form_div">
+				  		<span id="advanced_search_link">
+				  			<a href="#" data-toggle="modal" data-target="#advancedSearch">Advanced Search</a>
+				  		</span>
+				  		<input id="simple_search_input" type="text">
+				  		<input type="submit" value="Search">
+				  </li>
 				</ul>
 		   	</div>
 		</nav> 

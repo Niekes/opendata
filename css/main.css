@@ -17,3 +17,21 @@ html, body {
 	height: 100%;
 	display: block;
 }
+
+#form_div {
+	position: absolute;
+	right: 13px;
+	top: 13px;
+}
+
+#advanced_search_link {
+	margin-right: 10px;
+}
+
+.advanced_search_input {
+	display: block;
+}
+
+.advanced_search_input + .advanced_search_input {
+	margin-top: 20px;
+}
