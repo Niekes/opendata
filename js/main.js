@@ -52,9 +52,9 @@ $(function() {
 function setupData() {
 	$.ajax({
 		url: "./res/airports.json",
-		"type":"GET",
-        "dataType":"json",
-        "contentType":"application/json",
+		type:"GET",
+        dataType:"json",
+        contentType:"application/json",
 		success: function(result) {
 
 			$.each(result, function (key, res) {
@@ -82,7 +82,8 @@ function setupData() {
 		setMarkers('large_airport');
 		setupHeatMap();
 		$( "#search_input" ).autocomplete({
-			source: airports_simple
+			source: airports_simple,
+			minLength: 3
 		});
 	});
 };
