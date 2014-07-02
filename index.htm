@@ -6,6 +6,7 @@
 		<link rel="stylesheet" href="./css/reset.css">
 		<link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
 		<link rel="stylesheet" href="./css/main.css">
+		<link rel="stylesheet" href="./css/jquery-ui.css">
 	</head>
 
 	<body>
@@ -19,17 +20,35 @@
 		        <h4 class="modal-title" id="myModalLabel">Advanced search</h4>
 		      </div>
 		      <div class="modal-body">
-		        <div class="advanced_search_input">Continent<input></div>
-		        <div class="advanced_search_input">Country<select>
-		        			<option>Bla</option>
-		        			<option>Blupp</option>
-		        			<option>Hu</option>
-		        			<option>Hi</option>
-		    		   </select></div>
+		      	<form role="form">
+				  <div class="form-group">
+				    <label for="advanced_country_input">Country</label>
+				    <input type="text" class="form-control" id="advanced_country_input" placeholder="e.g. Germany">
+				  </div>
+				  <div class="form-group">
+				    <label for="advanced_continent_input">Continent</label>
+				    <input type="text" class="form-control" id="advanced_continent_input" placeholder="e.g. Europe">
+				  </div>
+				  <div class="checkbox">
+				    <label>
+				      <input type="checkbox"> Small
+				    </label>
+				  </div>
+				  <div class="checkbox">
+				    <label>
+				      <input type="checkbox"> Medium
+				    </label>
+				  </div>
+				  <div class="checkbox">
+				    <label>
+				      <input type="checkbox"> Large
+				    </label>
+				  </div>
+				  <button onclick="advancedSearch();" class="btn btn-primary">Search</button>
+				</form>
 		      </div>
 		      <div class="modal-footer">
-		        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-		        <button type="button" class="btn btn-primary">Search</button>
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		      </div>
 		    </div>
 		  </div>
@@ -65,8 +84,8 @@
 				  		<span id="advanced_search_link">
 				  			<a href="#" data-toggle="modal" data-target="#advancedSearch">Advanced Search</a>
 				  		</span>
-				  		<input id="simple_search_input" type="text">
-				  		<input type="submit" value="Search">
+				  		<input id="simple_search_input" class="country_input" type="text">
+				  		<button onclick="simpleSearch();" >Quick Search</button>
 				  </li>
 				</ul>
 		   	</div>
@@ -75,7 +94,9 @@
 
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCzieVh2_sb-DScaGGzNCvUddUa3Ys9x8A&libraries=visualization&sensor=true"></script>
 		<script type="text/javascript" src="./js/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="./js/jquery-ui.js"></script>
 		<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="./js/main.js"></script>
+		<script type="text/javascript" src="./js/autocomplete.js"></script>
 	</body>
 </html>
