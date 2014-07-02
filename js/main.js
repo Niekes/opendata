@@ -1,5 +1,6 @@
 var map;
 var heatmap;
+var airports_simple = new Array();
 var positions = new Array();
 
 //Arrays holding the airports
@@ -72,12 +73,17 @@ function setupData() {
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
 
+				airports_simple.push(res.name + ", " + res.municipality + ", " + res.iso_country);
+
 			});
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
 		setMarkers('large_airport');
 		setupHeatMap();
+		$( "#search_input" ).autocomplete({
+			source: airports_simple
+		});
 	});
 };
 
