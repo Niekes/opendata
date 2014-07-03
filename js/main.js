@@ -73,7 +73,7 @@ function setupData() {
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
 
-				airports_simple.push(res.name + ", " + res.municipality + ", " + res.iso_country);
+				airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
 
 			});
 		}
@@ -82,8 +82,19 @@ function setupData() {
 		setMarkers('large_airport');
 		setupHeatMap();
 		$( "#search_input" ).autocomplete({
-			source: airports_simple,
-			minLength: 3
+			source: _.values(airports_simple), //fill autocomplete with values of airports_simple
+			minLength: 3,
+			select: function( event, ui ) {
+				var bla = ui.item.value; //value of selected item
+				var airp_id = (_.invert(airports_simple))[bla]; //get id of that airport by inverting hash
+				var lati = airports[airp_id].latitude_deg;
+				var longi = airports[airp_id].longitude_deg;
+				var airp_marker = markers[airp_id];
+				airp_marker.setMap(map); // in case marker isn't visible at the moment
+				airp_marker.setAnimation(google.maps.Animation.BOUNCE);
+				map.panTo(new google.maps.LatLng(lati, longi));
+				setTimeout(function(){airp_marker.setAnimation(null)}, 2000);
+			}
 		});
 	});
 };

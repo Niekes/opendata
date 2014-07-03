@@ -29,10 +29,10 @@ html, body {
 	top: 13px;
 }
 
-#advanced_search_link {
-	margin-right: 10px;
+#search_input {
+	width: 450px;
 }
 
-#search_input {
-	width: 300px;
+.ui-menu {
+	width: 450px;
 }
