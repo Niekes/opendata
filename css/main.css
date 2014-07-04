@@ -36,3 +36,13 @@ html, body {
 .ui-menu {
 	width: 450px;
 }
+
+@media (max-width: 800px) {
+	#search_input {
+	width: 300px;
+	}
+
+	.ui-menu {
+		width: 300px;
+	}
+}
