@@ -2,40 +2,30 @@ var map;
 var heatmap;
 var positions = new Array();
 
-//Arrays holding the airports
-var airports = new Array();
-
-//Array holding the associated Markers
-var markers = new Array();
-
 //When document is ready
 $(function() {
+	
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 7,
-		center: new google.maps.LatLng(52,13),
+		center: new google.maps.LatLng(0,0),
 		disableDefaultUI: false
 	});
 
 	if(navigator.geolocation) {
     	navigator.geolocation.getCurrentPosition(function(position) {
-      	var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      	map.setCenter(pos);
-    	}, function() {
-      		handleNoGeolocation(true);
-    	});
-  	}else{
-    	console.log('Doesnt Works');
-  	}
+      		map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+    	}); 
+	} else console.log('Doesnt Works');
 
-	//Fill arrays
+	//Create new database
 	setupData();
 
-	//Add event listener to the map
+	/*Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
 		if(map.getZoom() >= 8) {
 			//Change map depending on zoom level
 		} 
-	});
+	});*/
 });
 
 //Fills json data into two arrays
@@ -46,49 +36,19 @@ function setupData() {
         "dataType":"json",
         "contentType":"application/json",
 		success: function(result) {
-
-			$.each(result, function (key, res) {
-				airports[res.id] = res;
-				markers[res.id] = 
-					new google.maps.Marker({
-						position: new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-						airport_id: res.id,
-						map: null
-					});
-				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + ' in ' + airports[res.id].municipality;
-
-				var infowindow = new google.maps.InfoWindow({
-      				content: contentString,
-      				// content: markers[res.id].name;
-  				});
-
-				google.maps.event.addListener(markers[res.id], "click", function() {
-					console.log(airports[this.airport_id]);
-					infowindow.open(map, markers[res.id]);
-
-				});
-
-				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-
-			});
+			buildDatabase(result)
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
-		setMarkers('large_airport');
-		setupHeatMap();
+		//setMarkers('large_airport');
+		//setupHeatMap();
 	});
 };
 
-function setMarkers(type) {
+function setMarkers() {
 	$("#loader").css("display", "block");
-
-	for(var i = 0; i < airports.length; i++) {
-		if(airports[i]) {
-			if(airports[i].type == type) {
-				markers[i].setMap(map);
-			} else markers[i].setMap(null);
-		} 
-	}
+	
+	//getMarker(2).setMap(map);
 
 	$("#loader").css("display", "none");
 }
