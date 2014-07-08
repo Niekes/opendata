@@ -25,7 +25,7 @@ $(function() {
       		handleNoGeolocation(true);
     	});
   	}else{
-    	console.log('Doesnt Works');
+    	alert('Doesnt Works');
   	}
 
 	//Fill arrays
@@ -56,12 +56,7 @@ function setupData() {
 						airport_id: res.id,
 						map: null
 					});
-				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + '<br>' +
-				'<strong>City: </strong>' + airports[res.id].municipality + '<br>' +
-				'<strong>Country: </strong>' + airports[res.id].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[res.id].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[res.id].elevation_ft + ' Feet' + '<br>' +
-				'<a target="_blank" href=' + airports[res.id].home_link + '>' + airports[res.id].home_link + '</a>' + '<br>' +
-				'<a target="_blank" href=' + airports[res.id].wikipedia_link + '>' + airports[res.id].wikipedia_link + '</a>' ;
+				var contentString = createContent(res.id);
 
 				var infowindow = new google.maps.InfoWindow({
       				content: contentString,
@@ -121,4 +116,32 @@ function setupHeatMap() {
   	});
 
 	heatmap.setMap(map);
+}
+
+function createContent(airportId){
+	if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === true){
+		return 	'<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
+				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
+				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet';
+	}else if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === false){
+		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
+				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
+				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>';
+	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === true){
+		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
+				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
+				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
+	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === false){
+		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
+				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
+				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>' + '<br>' +
+				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
+	}
 }
