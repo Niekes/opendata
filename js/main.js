@@ -7,7 +7,7 @@ var positions = new Array();
 var airports = new Array();
 
 //Array holding the associated Markers
-var markers = new Array();
+var markers = new Array();	
 
 //When document is ready
 $(function() {
@@ -56,17 +56,20 @@ function setupData() {
 						airport_id: res.id,
 						map: null
 					});
-				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + ' in ' + airports[res.id].municipality;
+				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + ' in ' + airports[res.id].municipality + '<br>' +
+				'<strong>Country: </strong>' + airports[res.id].iso_country + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[res.id].elevation_ft * 30.48) / 100) + ' Meter,'+ '&nbsp;' + airports[res.id].elevation_ft + ' Feet' + '<br>' +
+				'<a target="_blank" href=' + airports[res.id].home_link + '>' + airports[res.id].home_link + '</a>' + '<br>' +
+				'<a target="_blank" href=' + airports[res.id].wikipedia_link + '>' + airports[res.id].wikipedia_link + '</a>' ;
 
 				var infowindow = new google.maps.InfoWindow({
       				content: contentString,
-      				// content: markers[res.id].name;
   				});
 
 				google.maps.event.addListener(markers[res.id], "click", function() {
-					console.log(airports[this.airport_id]);
+					
 					infowindow.open(map, markers[res.id]);
-
+					console.log(airports[this.airport_id]);
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
