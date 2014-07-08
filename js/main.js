@@ -65,7 +65,7 @@ function setupData() {
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					
 					infowindow.open(map, markers[res.id]);
-					console.log(airports[this.airport_id]);
+					// console.log(airports[this.airport_id]);
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
