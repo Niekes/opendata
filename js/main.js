@@ -56,9 +56,10 @@ function setupData() {
 						airport_id: res.id,
 						map: null
 					});
-				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + ' in ' + airports[res.id].municipality + '<br>' +
+				var contentString = '<strong>Airport: </strong>' + airports[res.id].name + '<br>' +
+				'<strong>City: </strong>' + airports[res.id].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[res.id].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[res.id].elevation_ft * 30.48) / 100) + ' Meter,'+ '&nbsp;' + airports[res.id].elevation_ft + ' Feet' + '<br>' +
+				'<strong>Elevation: </strong>' + Math.floor((airports[res.id].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[res.id].elevation_ft + ' Feet' + '<br>' +
 				'<a target="_blank" href=' + airports[res.id].home_link + '>' + airports[res.id].home_link + '</a>' + '<br>' +
 				'<a target="_blank" href=' + airports[res.id].wikipedia_link + '>' + airports[res.id].wikipedia_link + '</a>' ;
 
