@@ -8,7 +8,10 @@ function buildDatabase(data) {
 		alert("IDB unsupported. Features limited.");
 		return;
 	}
-		
+	
+	localStorage.setItem("airport", null);
+	localStorage.setItem("marker", null);
+	
 	var request = indexedDB.open("airports", version);
 	
 	request.onupgradeneeded = function(e) {
@@ -40,6 +43,7 @@ function buildDatabase(data) {
 		}
 		
 		sessionStorage.setItem("loaded", true);
+		
 		console.log("Ready.");
 	}
 	
@@ -49,24 +53,50 @@ function buildDatabase(data) {
 	}
 }
 
-//TODO Return-Objekt erhalten - bei return undefined 
-function requestAirportByID(id) {
+//Saves the requested airport in localstorage and creates the associated marker
+function getAirportByID(id) {
 	var transaction = database.transaction(["airports"], "readonly");
 	transaction.objectStore("airports").get(id).onsuccess = function(e) {
-		console.log(this.result);
+		//localStorage.setItem("airport", JSON.stringify(this.result));
+		setMarker(this.result);
 	}
 }
 
+//Create a marker on the map for each airport when the keyword equals the type of a airport
 function getAirportsByType(type) {
-	//var transaction = database.transaction(["airports"], "readonly");
-	//var objStore = transaction.objectStore("airports");
-	//var cursor = objStore.openCursor();
-	//var keyrange;
+	var objStore = database.transaction(["airports"], "readonly").objectStore("airports");
+	var index = objStore.index("type");
+	
+	index.openKeyCursor(type).onsuccess = function(e) {
+		var cursor = event.target.result;
+		if(cursor) {
+			getAirportByID(cursor.primaryKey);
+			cursor.continue();
+		}
+	}
 }
 
-function getMarker(id) {
+function getMarkerByID(id) {
 	var transaction = database.transaction(["markers"], "readonly");
 	transaction.objectStore("markers").get(id).onsuccess = function(e) {
-		console.log(this.result);
+		localStorage.setItem("marker", JSON.stringify(this.result));
 	}
+}
+
+function setMarker(airport) {
+	var marker = new google.maps.Marker({
+		position: new google.maps.LatLng(airport.latitude_deg, airport.longitude_deg),
+		map: map
+	})
+	
+	//new google.maps.event.addListener(marker, "click", function() {
+		
+	//})
+	
+	//localStorage.setItem(count, marker);
+}
+
+function storeData(id) {
+	var transaction = database.transaction(["markers"], "readwrite");
+	transaction.objectStore("markers").add(localStorage.setItem("marker", marker), airport.id);
 }

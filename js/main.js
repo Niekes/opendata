@@ -4,7 +4,6 @@ var positions = new Array();
 
 //When document is ready
 $(function() {
-	
 	map = new google.maps.Map(document.getElementById("map"), {
 		zoom: 7,
 		center: new google.maps.LatLng(0,0),
@@ -16,7 +15,13 @@ $(function() {
       		map.setCenter(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
     	}); 
 	} else console.log('Doesnt Works');
-
+	
+	//Create markers when map is ready
+	google.maps.event.addListenerOnce(map, "tilesloaded", function() {
+		$("#loader").css("display", "none");
+		getAirportsByType("large_airport");
+	});
+	
 	//Create new database
 	setupData();
 
@@ -36,22 +41,10 @@ function setupData() {
         "dataType":"json",
         "contentType":"application/json",
 		success: function(result) {
-			buildDatabase(result)
+			buildDatabase(result);
 		}
-	}).done(function() {
-		$("#loader").css("display", "none");
-		//setMarkers('large_airport');
-		//setupHeatMap();
-	});
+	})
 };
-
-function setMarkers() {
-	$("#loader").css("display", "block");
-	
-	//getMarker(2).setMap(map);
-
-	$("#loader").css("display", "none");
-}
 
 function setupHeatMap() {
 	heatmap = new google.maps.visualization.HeatmapLayer({
