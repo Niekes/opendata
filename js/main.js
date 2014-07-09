@@ -35,13 +35,13 @@ $(function() {
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
 
-		if(map.getZoom() <= 8 && markersVisible == true) {
+		if(map.getZoom() <= 6 && markersVisible == true) {
 			for(var key in markers) {
 				markers[key].setMap(null);
 			}
 			markersVisible = false;
 		}
-		else if(map.getZoom() > 8 && markersVisible == false) {
+		else if(map.getZoom() > 6 && markersVisible == false) {
 			for(var key in markers) {
 				markers[key].setMap(map);
 			}
@@ -58,7 +58,6 @@ function setupData() {
         dataType:"json",
         contentType:"application/json",
 		success: function(result) {
-
 			$.each(result, function (key, res) {
 				airports[res.id] = res;
 				markers[res.id] = 
@@ -80,10 +79,16 @@ function setupData() {
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-
-				airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
+				if (res.iata_code != ""){
+					airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
+				}
+				else {
+					airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
+				}
+				
 
 			});
+			console.log(positions.length);
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
@@ -160,6 +165,7 @@ function createContent(airportId){
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
 	}
 }
+
 
 function handleNoGeolocation(errorFlag){
 	if(errorFlag){
