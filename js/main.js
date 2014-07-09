@@ -2,6 +2,7 @@ var map;
 var heatmap;
 var airports_simple = new Array();
 var positions = new Array();
+var markersVisible = true;
 
 //Arrays holding the airports
 var airports = new Array();
@@ -25,7 +26,7 @@ $(function() {
       		handleNoGeolocation(true);
     	});
   	}else{
-    	alert('Doesnt Works');
+    	alert('Doesn\'t Work');
   	}
 
 	//Fill arrays
@@ -33,9 +34,18 @@ $(function() {
 
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
-		if(map.getZoom() >= 8) {
-			//Change map depending on zoom level
+		if(map.getZoom() <= 8 && markersVisible == true) {
+			for(var key in markers) {
+				markers[key].setMap(null);
+			}
+			markersVisible = false;
 		} 
+		else if(map.getZoom() > 8 && markersVisible == false) {
+			for(var key in markers) {
+				markers[key].setMap(map);
+			}
+			markersVisible = true;
+		}
 	});
 });
 
@@ -112,7 +122,9 @@ function setMarkers(type) {
 
 function setupHeatMap() {
 	heatmap = new google.maps.visualization.HeatmapLayer({
-    	data: new google.maps.MVCArray(positions)
+    	data: new google.maps.MVCArray(positions),
+    	opacity: 0.8,
+    	radius: 15
   	});
 
 	heatmap.setMap(map);
