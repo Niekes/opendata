@@ -40,7 +40,7 @@ $(function() {
 				markers[key].setMap(null);
 			}
 			markersVisible = false;
-
+		}
 		else if(map.getZoom() > 8 && markersVisible == false) {
 			for(var key in markers) {
 				markers[key].setMap(map);
