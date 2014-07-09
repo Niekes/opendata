@@ -165,17 +165,3 @@ function removeMarkers(){
 		if(index === 0) return false;
 	});
 }		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
