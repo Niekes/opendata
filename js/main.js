@@ -26,7 +26,7 @@ $(function() {
       		handleNoGeolocation(true);
     	});
   	}else{
-    	alert('Doesn\'t Work');
+    	handleNoGeolocation(false);
   	}
 
 	//Fill arrays
@@ -158,5 +158,13 @@ function createContent(airportId){
 				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
+	}
+}
+
+function handleNoGeolocation(errorFlag){
+	if(errorFlag){
+		alert('Error: The Geolocation service failed.');
+	}else{
+		alert('Error: Your browser doesn\'t support geolocation.');
 	}
 }
