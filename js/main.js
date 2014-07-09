@@ -158,10 +158,3 @@ function createContent(airportId){
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
 	}
 }
-
-function removeMarkers(){
-	$.each(markers, function (index, item){
-		console.log(markers[2209].setMap(null));
-		if(index === 0) return false;
-	});
-}		
