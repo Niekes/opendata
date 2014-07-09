@@ -141,25 +141,25 @@ function createContent(airportId){
 		return 	'<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet';
+				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet';
 	}else if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === false){ // Has just Website
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>';
 	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === true){ // Has just Wikipedia link
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
 				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
 	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === false){ // Has both links
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
-				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
+				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
 				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
@@ -174,3 +174,4 @@ function handleNoGeolocation(errorFlag){
 		alert('Error: Your browser doesn\'t support geolocation.');
 	}
 }
+
