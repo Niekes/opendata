@@ -34,12 +34,13 @@ $(function() {
 
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
+
 		if(map.getZoom() <= 8 && markersVisible == true) {
 			for(var key in markers) {
 				markers[key].setMap(null);
 			}
 			markersVisible = false;
-		} 
+
 		else if(map.getZoom() > 8 && markersVisible == false) {
 			for(var key in markers) {
 				markers[key].setMap(map);
@@ -75,7 +76,7 @@ function setupData() {
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					
 					infowindow.open(map, markers[res.id]);
-					// console.log(airports[this.airport_id]);
+					console.log(airports[this.airport_id]);
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
@@ -131,24 +132,24 @@ function setupHeatMap() {
 }
 
 function createContent(airportId){
-	if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === true){
+	if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === true){ // Has no links
 		return 	'<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
 				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet';
-	}else if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === false){
+	}else if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === false){ // Has just Website
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
 				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>';
-	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === true){
+	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === true){ // Has just Wikipedia link
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
 				'<strong>Elevation: </strong>' + Math.floor((airports[airportId].elevation_ft * 30.48) / 100) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
-	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === false){
+	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === false){ // Has both links
 		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
 				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
 				'<strong>Country: </strong>' + airports[airportId].iso_country + '<br>' +
@@ -157,3 +158,24 @@ function createContent(airportId){
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
 	}
 }
+
+function removeMarkers(){
+	$.each(markers, function (index, item){
+		console.log(markers[2209].setMap(null));
+		if(index === 0) return false;
+	});
+}		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
