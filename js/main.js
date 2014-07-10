@@ -3,6 +3,9 @@ var heatmap;
 var airports_simple = new Array();
 var positions = new Array();
 var markersVisible = true;
+var iconSmallAirports = new google.maps.MarkerImage('img/small_airports.png');
+var iconMediumAirports = new google.maps.MarkerImage('img/medium_airports.png');
+var iconBigAirports = new google.maps.MarkerImage('img/big_airports.png');
 
 //Arrays holding the airports
 var airports = new Array();
@@ -62,9 +65,10 @@ function setupData() {
 				airports[res.id] = res;
 				markers[res.id] = 
 					new google.maps.Marker({
-						position: new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
+						position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
 						airport_id: res.id,
-						map: null
+						icon: 		iconBigAirports,
+						map: 		null
 					});
 				var contentString = createContent(res.id);
 
