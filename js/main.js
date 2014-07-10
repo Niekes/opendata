@@ -5,7 +5,7 @@ var positions = new Array();
 var markersVisible = true;
 var iconSmallAirports = new google.maps.MarkerImage('img/small_airports.png');
 var iconMediumAirports = new google.maps.MarkerImage('img/medium_airports.png');
-var iconBigAirports = new google.maps.MarkerImage('img/big_airports.png');
+var iconBigAirports = new google.maps.MarkerImage('img/big_airports.gif');
 
 //Arrays holding the airports
 var airports = new Array();
@@ -67,7 +67,7 @@ function setupData() {
 					new google.maps.Marker({
 						position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
 						airport_id: res.id,
-						icon: 		iconBigAirports,
+						// icon: 		iconBigAirports,
 						map: 		null
 					});
 				var contentString = createContent(res.id);
@@ -79,7 +79,7 @@ function setupData() {
 				google.maps.event.addListener(markers[res.id], "click", function() {
 					
 					infowindow.open(map, markers[res.id]);
-					console.log(airports[this.airport_id]);
+					// console.log(airports[this.airport_id]);
 				});
 
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
@@ -92,7 +92,6 @@ function setupData() {
 				
 
 			});
-			console.log(positions.length);
 		}
 	}).done(function() {
 		$("#loader").css("display", "none");
