@@ -1,8 +1,8 @@
 var map;
 var heatmap;
-var airports_simple = new Array();
-var positions = new Array();
-var markersVisible = true;
+var airports_simple = [];
+var positions = [];
+var markersVisible = false;
 var iconSmallAirports = new google.maps.MarkerImage('img/small_airports.png');
 var iconMediumAirports = new google.maps.MarkerImage('img/medium_airports.png');
 var iconBigAirports = new google.maps.MarkerImage('img/big_airports.gif');
@@ -13,12 +13,11 @@ var airports_large = [];
 
 var before;
 var after;
-var mode = 3;
+var wasMode;
+var currentMode; // 1 = small, 2 = medium, 3 = large
+var zoomLevel = 4;
 
-//Arrays holding the airports
-//var airports = new Array();
-
-//Array holding the associated Markers
+//Arrays holding the associated Markers
 var markers_small = [];
 var markers_medium = [];
 var markers_large = [];
@@ -46,54 +45,45 @@ $(function() {
 
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
-
-		if(mode == 1) {
-			if(map.getZoom() <= 6 && markersVisible == true) {
-				for(var key in markers_small) {
-					markers_small[key].setMap(null);
-				}
-				markersVisible = false;
-			}
-			else if(map.getZoom() > 6 && markersVisible == false) {
-				for(var key in markers_small) {
-					markers_small[key].setMap(map);
-				}
-				markersVisible = true;
-			}
+		console.log(map.getZoom());
+		setZoomChangedForMarkers();
+		if(map.getZoom() > 7){
+			heatmap.set("radius", 35);
 		}
-
-		else if(mode == 2) {
-			if(map.getZoom() <= 6 && markersVisible == true) {
-				for(var key in markers_medium) {
-					markers_medium[key].setMap(null);
-				}
-				markersVisible = false;
-			}
-			else if(map.getZoom() > 6 && markersVisible == false) {
-				for(var key in markers_medium) {
-					markers_medium[key].setMap(map);
-				}
-				markersVisible = true;
-			}
+		else if(map.getZoom() <= 6 && map.getZoom() > 4) {
+			heatmap.set("radius", 20);
 		}
-
-		else { // mode = 3
-			if(map.getZoom() <= 6 && markersVisible == true) {
-				for(var key in markers_large) {
-					markers_large[key].setMap(null);
-				}
-				markersVisible = false;
-			}
-			else if(map.getZoom() > 6 && markersVisible == false) {
-				for(var key in markers_large) {
-					markers_large[key].setMap(map);
-				}
-				markersVisible = true;
-			}
+		else if(map.getZoom() <= 4 && map.getZoom() > 2) {
+			heatmap.set("radius", 10);
+		}
+		else {
+			heatmap.set("radius", 6);
 		}
 		
 	});
 });
+
+function setZoomChangedForMarkers() {
+	if(currentMode == 1) {
+		var markers = markers_small;
+	}
+	else if(currentMode == 2) {
+		var markers = markers_medium;
+	}
+	else {
+		var markers = markers_large;
+	}
+
+	if(map.getZoom() <= zoomLevel && markersVisible == true) {
+		for(var key in markers) {
+			markers[key].setMap(null);
+		}
+		markersVisible = false;
+	}
+	else if(map.getZoom() > zoomLevel && markersVisible == false) {
+		setMarkers();
+	}
+}
 
 //Fills json data into two arrays
 function setupData() {
@@ -180,8 +170,9 @@ function setupData() {
 			console.log("Iterating done. Took: " + (after - before) + " ms");
 		}
 	}).done(function() {
-		
-		setMarkers(airports_large, markers_large);
+		setMode(3);
+		wasMode = null;
+		setMarkers();
 		setupHeatMap();
 		$( "#search_input" ).autocomplete({
 			source: _.values(airports_simple), //fill autocomplete with values of airports_simple
@@ -203,12 +194,48 @@ function setupData() {
 	});
 };
 
-function setMarkers(airports, markers) {
+function removeMarkers() {
+	if(markersVisible == true) {
+
+		if(wasMode == 1) {
+			var markersToDelete = markers_small;
+		}
+		else if(wasMode == 2) {
+			var markersToDelete = markers_medium;
+		}
+		else if(wasMode == 3) {
+			var markersToDelete = markers_large;
+		}
+		for(var i in markersToDelete) {
+			markersToDelete[i].setMap(null);
+		}
+	}
+}
+
+function setMarkers() {
 	before = new Date().getTime();
 	$("#loader").css("display", "block");
-	for(var i in airports) {
-		markers[i].setMap(map);
+	removeMarkers();
+	if(currentMode != wasMode && map.getZoom() >= zoomLevel) {
+
+		if(currentMode == 1) {
+			var markers = markers_small;
+		}
+		else if (currentMode == 2) {
+			var markers = markers_medium;
+		}
+		else if (currentMode == 3) {
+			var markers = markers_large;
+		}
+		for(var i in markers) {
+			markers[i].setMap(map);
+		}
+		markersVisible = true;
 	}
+	else {
+		// The markers are already set or zoom is too low.
+	}
+	
 	$("#loader").css("display", "none");
 	after = new Date().getTime();
 	console.log("Setting Markers took: " + (after - before) + " ms");
@@ -220,11 +247,11 @@ function setupHeatMap() {
 	heatmap = new google.maps.visualization.HeatmapLayer({
     	data: new google.maps.MVCArray(positions),
     	opacity: 0.8,
-    	radius: 15
+    	radius: 33
   	});
 	heatmap.setMap(map);
 	after = new Date().getTime();
-	console.log("Setting up HeatMap. Took: " + (after - before));
+	console.log("Setting up HeatMap. Took: " + (after - before) + " ms");
 }
 
 function createContent(airportId, airports){
@@ -272,9 +299,49 @@ function panToMarker(airp_id, airports_array, markers_array) {
 	var longi = airports_array[airp_id].longitude_deg;
 	var airp_marker = markers_array[airp_id];
 	airp_marker.setMap(map); // in case marker isn't visible at the moment
+	markers_array.push(airp_marker);
 	airp_marker.setAnimation(google.maps.Animation.BOUNCE);
 	map.panTo(new google.maps.LatLng(lati, longi));
 	after = new Date().getTime();
 	console.log("Panning took: " + (after - before) + " ms")
 	setTimeout(function(){airp_marker.setAnimation(null)}, 2000);
+}
+
+function setMode(value) {
+	wasMode = currentMode;
+	currentMode = value;
+	$('.modeToggle').removeClass('active');
+	if(value == 1) {
+		$('#toggle_small').addClass('active');
+		zoomLevel = 6;
+	}
+	else if(value == 2) {
+		$('#toggle_medium').addClass('active');
+		zoomLevel = 5;
+	}
+	else if(value == 3) {
+		$('#toggle_large').addClass('active');
+		zoomLevel = 4;
+	}
+}
+
+function showLessMarkers() {
+	if(currentMode == 1) {
+		markers = markers_small;
+	}
+	else if(currentMode == 2){
+		markers = markers_medium;
+	}
+	else {
+		markers = markers_large;
+	}
+	var bla = Math.floor((Math.random() * 10) + 1);
+	markerkeys = _.keys(markers);
+	for(var i = 0; i < markerkeys.length; i = i + bla) {
+			if(bla > 2) {
+				markers[markerkeys[i]].setMap(null);
+			}
+				
+			
+	}
 }

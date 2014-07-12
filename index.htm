@@ -17,22 +17,20 @@
   			<div>
 	      		<ul class="nav navbar-nav">
 				  <li class="dropdown">
-				    <a class="dropdown-toggle" data-toggle="dropdown">Settings</a>
+				    <a class="dropdown-toggle" data-toggle="dropdown">Toggle Airport Size</a>
 				    <ul class="dropdown-menu" id="dropdown">
-				    	<li value="heliport" onclick="setMarkers('heliport')">
-				    		<a>Heliport</a>
+				    	<li id="toggle_small" class="modeToggle" value="small_airport" onclick="setMode(1);setMarkers();">
+				    		<a>Small Airports</a>
 				    	</li>
-				    	<li value="small_airport" onclick="setMarkers(airports_small, markers_small)">
-				    		<a>Small Airport</a>
+				    	<li id="toggle_medium" class="modeToggle" value="medium_airport" onclick="setMode(2);setMarkers();">
+				    		<a>Medium Airports</a>
 				    	</li>
-				    	<li value="medium_airport" onclick="setMarkers(airports_medium, markers_medium)">
-				    		<a>Medium Airport</a>
-				    	</li>
-				    	<li value="large_airport" class="active" onclick="setMarkers(airports_large, markers_large)">
-				    		<a>Large Airport</a>
+				    	<li id="toggle_large" class="modeToggle" value="large_airport" onclick="setMode(3);setMarkers();">
+				    		<a>Large Airports</a>
 				    	</li>
 				    </ul>
 				  </li>
+				  <li><a href="#" onclick="showLessMarkers();">Show less markers</a></li>
 				  <li><a id="loader"><img src="./res/ajax-loader.gif"></a></li>
 
 				  <li id="form_div">
