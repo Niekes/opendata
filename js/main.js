@@ -87,7 +87,6 @@ function setupData() {
 			countries[key] = res;
 		});
 	}).done(function() {
-		console.log(countries);
 		before = new Date().getTime();
 	console.log("Fetching airports.json");
 	$.getJSON('./res/airports_withoutheliports.json', function(data) {
