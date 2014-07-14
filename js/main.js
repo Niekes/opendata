@@ -45,7 +45,6 @@ $(function() {
 
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
-		console.log(map.getZoom());
 		setZoomChangedForMarkers();
 		if(map.getZoom() > 7){
 			heatmap.set("radius", 35);
@@ -89,87 +88,80 @@ function setZoomChangedForMarkers() {
 function setupData() {
 	before = new Date().getTime();
 	console.log("Fetching airports.json");
-	$.ajax({
-		url: "./res/airports_withoutheliports.json",
-		type:"GET",
-        dataType:"json",
-        contentType:"application/json",
-		success: function(result) {
-			after = new Date().getTime();
-			console.log("Fetching took: " + (after - before)  + " ms");
-			console.log("Starting to iterate..");
-			before = new Date().getTime();
-			$.each(result, function (key, res) {
-				if(res.type == "small_airport") {
-					airports_small[res.id] = res;
-					var contentString = createContent(res.id, airports_small);
-					markers_small[res.id] = new google.maps.Marker({
-						position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-						airport_id: res.id,
-						map: 		null
-					});
-					google.maps.event.addListener(markers_small[res.id], "click", function() {
-					infowindow.open(map, markers_small[res.id]);
-					});
-					positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-					if (res.iata_code != "" && res.type != "heliport" && res.type != "closed"){
-					airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
-					else {
-						airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
-				}
-				else if(res.type == "medium_airport") {
-					airports_medium[res.id] = res;
-					var contentString = createContent(res.id, airports_medium);
-					markers_medium[res.id] = new google.maps.Marker({
-						position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-						airport_id: res.id,
-						map: 		null
-					});
-					google.maps.event.addListener(markers_medium[res.id], "click", function() {
-					infowindow.open(map, markers_medium[res.id]);
-					});
-					positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-					if (res.iata_code != "" && res.type != "heliport" && res.type != "closed"){
-					airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
-					else {
-						airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
-				}
-				else if(res.type == "large_airport") {
-					airports_large[res.id] = res;
-					var contentString = createContent(res.id, airports_large);
-					markers_large[res.id] = new google.maps.Marker({
-						position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-						airport_id: res.id,
-						map: 		null
-					});
-					google.maps.event.addListener(markers_large[res.id], "click", function() {
-					infowindow.open(map, markers_large[res.id]);
-					});
-					positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-					if (res.iata_code != "" && res.type != "heliport" && res.type != "closed"){
-					airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
-					else {
-						airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-					}
+	$.getJSON('./res/airports_withoutheliports.json', function(data) {
+		after = new Date().getTime();
+		console.log("Fetching took: " + (after - before)  + " ms");
+		console.log("Starting to iterate..");
+		before = new Date().getTime();
+		for(var i in data) {
+			if(data[i].type == "small_airport") {
+				airports_small[data[i].id] = data[i];
+				var contentString = createContent(data[i].id, airports_small);
+				markers_small[data[i].id] = new google.maps.Marker({
+					position: 	new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg),
+					airport_id: data[i].id,
+					map: 		null
+				});
+				google.maps.event.addListener(markers_small[data[i].id], "click", function() {
+				infowindow.open(map, markers_small[data[i].id]);
+				});
+				positions[data[i].id] = new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg);
+				if (data[i].iata_code != "" && data[i].type != "heliport" && data[i].type != "closed"){
+				airports_simple[data[i].id] = data[i].name + " (" + data[i].iata_code + "), " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
 				}
 				else {
-				//do nothing
+					airports_simple[data[i].id] = data[i].name + ", " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
 				}
+			}
+			else if(data[i].type == "medium_airport") {
+				airports_medium[data[i].id] = data[i];
+				var contentString = createContent(data[i].id, airports_medium);
+				markers_medium[data[i].id] = new google.maps.Marker({
+					position: 	new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg),
+					airport_id: data[i].id,
+					map: 		null
+				});
+				google.maps.event.addListener(markers_medium[data[i].id], "click", function() {
+				infowindow.open(map, markers_medium[data[i].id]);
+				});
+				positions[data[i].id] = new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg);
+				if (data[i].iata_code != "" && data[i].type != "heliport" && data[i].type != "closed"){
+				airports_simple[data[i].id] = data[i].name + " (" + data[i].iata_code + "), " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
+				}
+				else {
+					airports_simple[data[i].id] = data[i].name + ", " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
+				}
+			}
+			else if(data[i].type == "large_airport") {
+				airports_large[data[i].id] = data[i];
+				var contentString = createContent(data[i].id, airports_large);
+				markers_large[data[i].id] = new google.maps.Marker({
+					position: 	new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg),
+					airport_id: data[i].id,
+					map: 		null
+				});
+				google.maps.event.addListener(markers_large[data[i].id], "click", function() {
+				infowindow.open(map, markers_large[data[i].id]);
+				});
+				positions[data[i].id] = new google.maps.LatLng(data[i].latitude_deg, data[i].longitude_deg);
+				if (data[i].iata_code != "" && data[i].type != "heliport" && data[i].type != "closed"){
+				airports_simple[data[i].id] = data[i].name + " (" + data[i].iata_code + "), " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
+				}
+				else {
+					airports_simple[data[i].id] = data[i].name + ", " + data[i].municipality + ", " + data[i].iso_country; // for autocomplete. save id as key.
+				}
+			}
+			else {
+			//do nothing
+			}
 
-				var infowindow = new google.maps.InfoWindow({
-      				content: contentString,
-  				});
-
-			});
-			after = new Date().getTime();
-			console.log("Iterating done. Took: " + (after - before) + " ms");
+			var infowindow = new google.maps.InfoWindow({
+  				content: contentString,
+				});
 		}
-	}).done(function() {
+		after = new Date().getTime();
+		console.log("Iterating done. Took: " + (after - before) + " ms");
+
 		setMode(3);
 		wasMode = null;
 		setMarkers();
@@ -192,7 +184,7 @@ function setupData() {
 			}
 		});
 	});
-};
+}
 
 function removeMarkers() {
 	if(markersVisible == true) {
@@ -210,6 +202,7 @@ function removeMarkers() {
 			markersToDelete[i].setMap(null);
 		}
 	}
+	//do nuttin'
 }
 
 function setMarkers() {
@@ -218,15 +211,7 @@ function setMarkers() {
 	removeMarkers();
 	if(currentMode != wasMode && map.getZoom() >= zoomLevel) {
 
-		if(currentMode == 1) {
-			var markers = markers_small;
-		}
-		else if (currentMode == 2) {
-			var markers = markers_medium;
-		}
-		else if (currentMode == 3) {
-			var markers = markers_large;
-		}
+		var markers = getCurrentMarkers();
 		for(var i in markers) {
 			markers[i].setMap(map);
 		}
@@ -326,6 +311,19 @@ function setMode(value) {
 }
 
 function showLessMarkers() {
+	markers = getCurrentMarkers();
+
+	var bla = Math.floor((Math.random() * 10) + 1);
+	markerkeys = _.keys(markers);
+	for(var i = 0; i < markerkeys.length; i = i + bla) {
+			if(bla > 2) {
+				markers[markerkeys[i]].setMap(null);
+			}		
+	}
+}
+
+function getCurrentMarkers() {
+	var markers;
 	if(currentMode == 1) {
 		markers = markers_small;
 	}
@@ -335,13 +333,5 @@ function showLessMarkers() {
 	else {
 		markers = markers_large;
 	}
-	var bla = Math.floor((Math.random() * 10) + 1);
-	markerkeys = _.keys(markers);
-	for(var i = 0; i < markerkeys.length; i = i + bla) {
-			if(bla > 2) {
-				markers[markerkeys[i]].setMap(null);
-			}
-				
-			
-	}
+	return markers;
 }
