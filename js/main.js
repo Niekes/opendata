@@ -90,7 +90,7 @@ function setupData() {
 	before = new Date().getTime();
 	console.log("Fetching airports.json");
 	$.ajax({
-		url: "./res/airports.json",
+		url: "./res/airports_withoutheliports.json",
 		type:"GET",
         dataType:"json",
         contentType:"application/json",
@@ -287,9 +287,9 @@ function createContent(airportId, airports){
 
 function handleNoGeolocation(errorFlag){
 	if(errorFlag){
-		alert('Error: The Geolocation service failed.');
+		//alert('Error: The Geolocation service failed.');
 	}else{
-		alert('Error: Your browser doesn\'t support geolocation.');
+		//alert('Error: Your browser doesn\'t support geolocation.');
 	}
 }
 
