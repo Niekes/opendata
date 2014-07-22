@@ -1,4 +1,5 @@
 html, body {
+	font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
 	height: 100%;
 	overflow: hidden;
 	width: 100%;
@@ -7,10 +8,12 @@ html, body {
 #map {
 	height: 100%;
 	width: 100%;
+	z-index: 0;
 }
 
 .navbar {
 	margin-bottom: 0;
+	z-index: 2;
 }
 
 .dropdown {
@@ -35,6 +38,35 @@ html, body {
 
 .ui-menu {
 	width: 450px;
+}
+
+#stats {
+	display: none;
+	position: absolute;
+	right: 0;
+	height: 100%;
+	width: 20%;
+	background-color: #f7f7f7;
+	z-index: 1;
+	padding: 1% 1%;
+	color: #5E5E5E;
+}
+
+#stats h2 {
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 15%;
+}
+
+#stats button {
+	float: right;
+	clear: right;
+	border: none;
+	background: transparent;
+}
+
+#stats li {
+	margin: 3% 0;
 }
 
 @media (max-width: 800px) {
