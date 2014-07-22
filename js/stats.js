@@ -25,23 +25,20 @@ function getStatistics() {
 		break;
 	}
 	
-	var count = 0;
 	var iataCount = 0;
 	var avg_height = 0;
 	
 	for(var i = 0; i < data.length; i++) {
 		if(data[i]) {
 			if(data[i].iata_code) iataCount++;
-			
 			avg_height += data[i].elevation_ft;
-			count++;
 		}
 	}
 	
-	avg_height = (avg_height / count) * 0.305;
+	avg_height = (avg_height / airports_count) * 0.305;
 	
 	$("#statsName").html("Statistics for " + statsName);
-	$("#statsContainer").append("<li>Airports counted worldwide: \n" + count + "</li>");
+	$("#statsContainer").append("<li>Airports counted worldwide: \n" + airports_count + "</li>");
 	$("#statsContainer").append("<li>Airports with IATA codes: \n" + iataCount + "</li>");
 	$("#statsContainer").append("<li>Average height above sea level: \n" + Math.round(avg_height) + "m</li>");
 	
