@@ -24,6 +24,10 @@ $(function() {
 		center: new google.maps.LatLng(52,13),
 		disableDefaultUI: false
 	});
+	
+	google.maps.event.addListener(map, "click", function() {
+		hideStats();
+	})
 
 	if(navigator.geolocation) {
     	navigator.geolocation.getCurrentPosition(function(position) {
