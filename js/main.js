@@ -8,6 +8,7 @@ var airports_small = [];
 var airports_medium = [];
 var airports_large = [];
 var countries = [];
+var airports_count;
 
 var before, after, wasMode, currentMode; // 1 = small, 2 = medium, 3 = large
 var zoomLevel = 4;
@@ -40,7 +41,6 @@ $(function() {
 
 	//Add event listener to the map
 	google.maps.event.addListener(map, "zoom_changed", function() {
-		console.log(map.getZoom());
 		setZoomChangedForMarkers();
 		if(map.getZoom() > 7){
 			heatmap.set("radius", 35);
@@ -59,24 +59,20 @@ $(function() {
 });
 
 function setZoomChangedForMarkers() {
-	if(currentMode == 1) {
-		var markers = markers_small;
-	}
-	else if(currentMode == 2) {
-		var markers = markers_medium;
-	}
-	else {
-		var markers = markers_large;
-	}
+	markers = getCurrentMarkers();
 
 	if(map.getZoom() <= zoomLevel && markersVisible == true) {
 		for(var key in markers) {
 			markers[key].setMap(null);
 		}
 		markersVisible = false;
+		$('#markers_feedback').html('Off');
+		$('#markers_feedback').css('background-color', '#FF8000');
 	}
 	else if(map.getZoom() > zoomLevel && markersVisible == false) {
 		setMarkers();
+		$('#markers_feedback').html('On');
+		$('#markers_feedback').css('background-color', '#7ABA7A');
 	}
 }
 
@@ -205,24 +201,27 @@ function removeMarkers() {
 		for(var i in markersToDelete) {
 			markersToDelete[i].setMap(null);
 		}
+		$('#markers_count').html('0');
 	}
 }
 
 function setMarkers() {
 	before = new Date().getTime();
+	airports_count = 0;
 	$("#loader").css("display", "block");
 	removeMarkers();
 	if(currentMode != wasMode && map.getZoom() >= zoomLevel) {
 		var markers = getCurrentMarkers();
 		for(var i in markers) {
 			markers[i].setMap(map);
+			airports_count++;
 		}
 		markersVisible = true;
 	}
 	else {
 		// The markers are already set or zoom is too low.
 	}
-	
+	$('#markers_count').html(airports_count);
 	$("#loader").css("display", "none");
 	after = new Date().getTime();
 	console.log("Setting Markers took: " + (after - before) + " ms");
@@ -300,26 +299,22 @@ function setMode(value) {
 	$('.modeToggle').removeClass('active');
 	if(value == 1) {
 		$('#toggle_small').addClass('active');
+		$('#airport_feedback').html('Small Airports');
 		zoomLevel = 6;
 	}
 	else if(value == 2) {
 		$('#toggle_medium').addClass('active');
+		$('#airport_feedback').html('Medium Airports');
 		zoomLevel = 5;
 	}
 	else if(value == 3) {
 		$('#toggle_large').addClass('active');
+		$('#airport_feedback').html('Large Airports');
 		zoomLevel = 4;
 	}
-}
-
-function showLessMarkers() {
-	var markers = getCurrentMarkers();
-	var bla = Math.floor((Math.random() * 10) + 1);
-	markerkeys = _.keys(markers);
-	for(var i = 0; i < markerkeys.length; i = i + bla) {
-			if(bla > 2) {
-				markers[markerkeys[i]].setMap(null);
-			}		
+	if(map.getZoom() < zoomLevel) {
+		$('#markers_feedback').html('Off');
+		$('#markers_feedback').css('background-color', '#FF8000');
 	}
 }
 

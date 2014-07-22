@@ -12,7 +12,7 @@
 	<body>
 		<nav class="navbar navbar-default" role="navigation">
    			<div class="navbar-header">
-      			<a class="navbar-brand">Airports</a>
+      			<a href="index.htm" title="Reload Page" class="navbar-brand">Airports</a>
    			</div>
   			<div>
 	      		<ul class="nav navbar-nav">
@@ -30,7 +30,9 @@
 				    	</li>
 				    </ul>
 				  </li>
-				  <li><a href="#" onclick="showLessMarkers();">Show less markers</a></li>
+				  <li><a>Mode: <span style="background-color: #FFCC00; border-radius: 4px; padding: 2px;" id="airport_feedback">LARGE Airports</span></a></li>
+				  <li><a>Markers: <span style="background-color: #7ABA7A; border-radius: 4px; padding: 2px;" id="markers_feedback">On</span></a></li>
+				  <li><a>Displaying <span style="background-color: #C7AFBD; border-radius: 4px; padding: 2px;" id="markers_count">...</span><span> Airports</span></a></li>
 				  <li><a id="loader"><img src="./res/ajax-loader.gif"></a></li>
 
 				  <li id="form_div">
