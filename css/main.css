@@ -50,6 +50,7 @@ html, body {
 	z-index: 1;
 	padding: 1% 1%;
 	color: #5E5E5E;
+	overflow: scroll;
 }
 
 #stats h2 {
@@ -67,10 +68,6 @@ html, body {
 
 #stats li {
 	margin: 3% 0;
-}
-
-#statsOverview {
-	overflow: scroll;
 }
 
 @media (max-width: 800px) {
