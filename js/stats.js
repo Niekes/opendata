@@ -8,12 +8,6 @@ function getStatistics() {
 	
 	$("#stats").css("display", "block");
 	
-	$.getJSON("./res/countries.json", function(result) {
-		$.each(result, function(key, res) {
-			hist[key] = 0;
-		})
-	})
-	
 	switch(currentMode) {
 	case 1:
 		data = airports_small;
