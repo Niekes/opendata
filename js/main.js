@@ -7,7 +7,7 @@ var markersVisible = false;
 var airports_small = [];
 var airports_medium = [];
 var airports_large = [];
-var countries = [];
+var countries = {};
 var airports_count;
 
 var before, after, wasMode, currentMode; // 1 = small, 2 = medium, 3 = large
@@ -27,14 +27,10 @@ $(function() {
 
 	if(navigator.geolocation) {
     	navigator.geolocation.getCurrentPosition(function(position) {
-      	var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      	map.setCenter(pos);
-    	}, function() {
-      		handleNoGeolocation(true);
-    	});
-  	}else{
-    	handleNoGeolocation(false);
-  	}
+      		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      		map.setCenter(pos);
+    	})
+	}
 
 	//Fill arrays
 	setupData();
@@ -81,6 +77,7 @@ function setupData() {
 	$.getJSON('./res/countries.json', function(data) {
 		$.each(data, function (key, res) {
 			countries[key] = res;
+			hist[key] = 0;
 		});
 	}).done(function() {
 		before = new Date().getTime();
@@ -267,15 +264,6 @@ function createContent(airportId, airports){
 				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>' + '<br>' +
 				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
-	}
-}
-
-
-function handleNoGeolocation(errorFlag){
-	if(errorFlag){
-		//alert('Error: The Geolocation service failed.');
-	}else{
-		//alert('Error: Your browser doesn\'t support geolocation.');
 	}
 }
 
