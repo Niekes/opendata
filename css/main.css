@@ -41,7 +41,7 @@ html, body {
 }
 
 #stats {
-	opacity: 0.9;
+	opacity: 0.95;
 	display: none;
 	position: absolute;
 	right: 0;
