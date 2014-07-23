@@ -30,17 +30,25 @@
 				    	</li>
 				    </ul>
 				  </li>
-				  <li><a>Mode: <span style="background-color: #FFCC00; border-radius: 4px; padding: 2px;" id="airport_feedback">LARGE Airports</span></a></li>
+				  <li><a href="#" onclick="getStatistics()">Show Statistics</a></li>
+				  <li><a>Mode: <span style="background-color: #FFCC00; border-radius: 4px; padding: 2px;" id="airport_feedback">Large Airports</span></a></li>
 				  <li><a>Markers: <span style="background-color: #7ABA7A; border-radius: 4px; padding: 2px;" id="markers_feedback">On</span></a></li>
 				  <li><a>Displaying <span style="background-color: #C7AFBD; border-radius: 4px; padding: 2px;" id="markers_count">...</span><span> Airports</span></a></li>
 				  <li><a id="loader"><img src="./res/ajax-loader.gif"></a></li>
 
 				  <li id="form_div">
-				  		<input id="search_input" type="text" placeholder="Search by Airports, IATA, Cities, Countries">
+					<input id="search_input" type="text" placeholder="Search by Airports, Cities, Countries or IATA Code">
 				  </li>
 				</ul>
 		   	</div>
 		</nav> 
+		
+		<section id="stats">
+			<button onclick="hideStats()">Hide Statistics >></button>
+			<h2 id="statsName"></h2>
+			<ul id="statsContainer"></ul>
+			<div id="statsOverview"><ul></ul></div>
+		</section>
 		<section id="map"></section>
 
 		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCzieVh2_sb-DScaGGzNCvUddUa3Ys9x8A&libraries=visualization&sensor=true"></script>
@@ -49,5 +57,6 @@
 		<script type="text/javascript" src="./js/underscore-min.js"></script>
 		<script type="text/javascript" src="./bootstrap/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="./js/main.js"></script>
+		<script type="text/javascript" src="./js/stats.js"></script>
 	</body>
 </html>
