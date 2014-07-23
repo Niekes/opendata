@@ -66,6 +66,7 @@ function setZoomChangedForMarkers() {
 			markers[key].setMap(null);
 		}
 		markersVisible = false;
+		$('#markers_count').html('0');
 		$('#markers_feedback').html('Off');
 		$('#markers_feedback').css('background-color', '#FF8000');
 	}
@@ -78,10 +79,12 @@ function setZoomChangedForMarkers() {
 
 //Fills json data into two arrays
 function setupData() {
+	console.log('Fetching Countries');
 	$.getJSON('./res/countries.json', function(data) {
 		$.each(data, function (key, res) {
 			countries[key] = res;
 		});
+		console.log('Countries done');
 	}).done(function() {
 		before = new Date().getTime();
 	console.log("Fetching airports.json");
@@ -141,12 +144,23 @@ function setupData() {
 				infowindow.open(map, markers_large[res.id]);
 				});
 				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-				if (res.iata_code != ""){
-				airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + countries[res.iso_country]; // for autocomplete. save id as key.
+				var autocomplete = "";
+				if(res.name) {
+					autocomplete += res.name;
 				}
-				else {
-					airports_simple[res.id] = res.name + ", " + res.municipality + ", " + countries[res.iso_country]; // for autocomplete. save id as key.
+				if(res.iata_code){
+					autocomplete += " (" + res.iata_code + ")";
 				}
+				if(res.municipality) {
+					autocomplete += ", " + res.municipality;
+				}
+				
+				if(res.iso_country) {
+					autocomplete += ", " + countries[res.iso_country];
+				}
+
+				airports_simple[res.id] = autocomplete;
+
 			}
 			else {
 			//do nothing
