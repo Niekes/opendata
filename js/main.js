@@ -1,5 +1,5 @@
 var map;
-var heatmap;
+var token;
 var airports_simple = [];
 var positions = [];
 var markersVisible = false;
@@ -19,43 +19,17 @@ var markers_medium = [];
 var markers_large = [];
 //When document is ready
 $(function() {
-	map = new google.maps.Map(document.getElementById("map"), {
-		zoom: 7,
-		center: new google.maps.LatLng(52,13),
-		disableDefaultUI: false
-	});
+	var token = L.mapbox.accessToken = "pk.eyJ1IjoiY29ycm9kaXplIiwiYSI6IkN4ZTAtZFUifQ.30pfMZ3Nqd5mJoLIrQ19uQ";
+	var map = L.mapbox.map("map", "corrodize.j40899hk");
 	
-	google.maps.event.addListener(map, "click", function() {
-		hideStats();
-	})
-
 	if(navigator.geolocation) {
-    	navigator.geolocation.getCurrentPosition(function(position) {
-      		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-      		map.setCenter(pos);
-    	})
+		navigator.geolocation.getCurrentPosition(function(position) {
+			map.setView([position.coords.latitude, position.coords.longitude], 5);
+		})
 	}
 
 	//Fill arrays
 	setupData();
-
-	//Add event listener to the map
-	google.maps.event.addListener(map, "zoom_changed", function() {
-		setZoomChangedForMarkers();
-		if(map.getZoom() > 7){
-			heatmap.set("radius", 35);
-		}
-		else if(map.getZoom() <= 6 && map.getZoom() > 4) {
-			heatmap.set("radius", 20);
-		}
-		else if(map.getZoom() <= 4 && map.getZoom() > 2) {
-			heatmap.set("radius", 10);
-		}
-		else {
-			heatmap.set("radius", 6);
-		}
-		
-	});
 });
 
 function setZoomChangedForMarkers() {
@@ -86,12 +60,15 @@ function setupData() {
 	}).done(function() {
 		before = new Date().getTime();
 	console.log("Fetching airports.json");
+	
 	$.getJSON('./res/airports_withoutheliports.json', function(data) {
 		after = new Date().getTime();
+		
 		console.log("Fetching took: " + (after - before)  + " ms");
 		console.log("Starting to iterate..");
+		
 		before = new Date().getTime();
-		$.each(data, function (key, res) {
+		/*$.each(data, function (key, res) {
 			if(res.type == "small_airport") {
 				airports_small[res.id] = res;
 				var contentString = createContent(res.id, airports_small);
@@ -181,7 +158,7 @@ function setupData() {
 					panToMarker(airp_id, airports_large, markers_large);
 				}
 			}
-		});
+		});*/
 	});
 	});
 	
