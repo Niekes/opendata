@@ -80,3 +80,9 @@ html, body {
 		width: 300px;
 	}
 }
+
+@media (min-width: 1500px) {
+	#search_input {
+	width: 600px;
+	}
+}
