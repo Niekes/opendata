@@ -24,6 +24,22 @@ $(function() {
 		})
 	}
 
+	map.on("click", function() {
+		hideStats()
+	});
+
+	map.on("zoomend", function() {
+		if(map.getZoom() > 5) {
+			map.featureLayer.setFilter(function() {
+				return true;
+			});
+		} else {
+			map.featureLayer.setFilter(function() {
+				return false;
+			});
+		}
+	})
+
 	setupData();
 
 });
