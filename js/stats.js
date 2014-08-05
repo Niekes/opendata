@@ -37,14 +37,14 @@ function getStatistics() {
 	
 	for(var i = 0; i < data.length; i++) {
 		if(data[i]) {
-			if(data[i].iata_code) iataCount++;
-			avg_height += data[i].elevation_ft;
-			hist[data[i].iso_country]++;
+			if(data[i].airport.iata_code) iataCount++;
+			avg_height += data[i].airport.elevation_ft;
+			hist[data[i].airport.iso_country]++;
 		}
 	}
 	
 	//convert from ft to meters
-	avg_height = (avg_height / airports_count) * 0.305;
+	avg_height = (avg_height / airports_count) * 0.3048;
 	
 	$("#statsName").html("Statistics for " + statsName);
 	$("#statsContainer").append("<br><li>Airports counted worldwide: \n" + airports_count + "</li>");

@@ -1,279 +1,131 @@
 var map;
 var token;
 var airports_simple = [];
-var positions = [];
 var markersVisible = false;
+var geojson = [];
 
 var airports_small = [];
 var airports_medium = [];
 var airports_large = [];
 var countries = {};
-var airports_count;
+var airports_count = 0;
 
 var before, after, wasMode, currentMode; // 1 = small, 2 = medium, 3 = large
 var zoomLevel = 4;
 
-//Arrays holding the associated Markers
-var markers_small = [];
-var markers_medium = [];
-var markers_large = [];
 //When document is ready
 $(function() {
-	var token = L.mapbox.accessToken = "pk.eyJ1IjoiY29ycm9kaXplIiwiYSI6IkN4ZTAtZFUifQ.30pfMZ3Nqd5mJoLIrQ19uQ";
-	var map = L.mapbox.map("map", "corrodize.j40899hk");
-	
+	token = L.mapbox.accessToken = "pk.eyJ1IjoiY29ycm9kaXplIiwiYSI6IkN4ZTAtZFUifQ.30pfMZ3Nqd5mJoLIrQ19uQ";
+	map = L.mapbox.map("map", "corrodize.j40899hk");
+
 	if(navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(function(position) {
 			map.setView([position.coords.latitude, position.coords.longitude], 5);
 		})
 	}
 
-	//Fill arrays
 	setupData();
+
 });
-
-function setZoomChangedForMarkers() {
-	markers = getCurrentMarkers();
-
-	if(map.getZoom() <= zoomLevel && markersVisible == true) {
-		for(var key in markers) {
-			markers[key].setMap(null);
-		}
-		markersVisible = false;
-		$('#markers_count').html('0');
-		$('#markers_feedback').html('Off');
-		$('#markers_feedback').css('background-color', '#FF8000');
-	}
-	else if(map.getZoom() > zoomLevel && markersVisible == false) {
-		setMarkers();
-		$('#markers_feedback').html('On');
-		$('#markers_feedback').css('background-color', '#7ABA7A');
-	}
-}
 
 //Fills json data into two arrays
 function setupData() {
-	console.log('Fetching Countries');
+	//load countries json	
 	$.getJSON('./res/countries.json', function(data) {
 		$.each(data, function (key, res) {
 			countries[key] = res;
 			hist[key] = 0;
 		});
-		console.log('Countries done');
-	}).done(function() {
-		before = new Date().getTime();
-	console.log("Fetching airports.json");
+	});
 	
+	//load airports json
 	$.getJSON('./res/airports_withoutheliports.json', function(data) {
-		after = new Date().getTime();
-		
-		console.log("Fetching took: " + (after - before)  + " ms");
-		console.log("Starting to iterate..");
-		
-		before = new Date().getTime();
-		/*$.each(data, function (key, res) {
-			if(res.type == "small_airport") {
-				airports_small[res.id] = res;
-				var contentString = createContent(res.id, airports_small);
-				markers_small[res.id] = new google.maps.Marker({
-					position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-					airport_id: res.id,
-					map: 		null
-				});
-				google.maps.event.addListener(markers_small[res.id], "click", function() {
-				infowindow.open(map, markers_small[res.id]);
-				});
-				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-				if (res.iata_code != "" && res.type != "heliport" && res.type != "closed"){
-				airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-				}
-				else {
-					airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
+		$.each(data, function (key, res) {
+			//create airport object
+			var data = {
+				airport: res,
+				marker: {
+					type: "Feature",
+					geometry: {
+						type: "Point",
+						coordinates: [res.longitude_deg, res.latitude_deg]
+					},
+					properties: {
+						title: res.name,
+						description: 
+							"<strong>City: </strong>" + res.municipality + "<br>" +
+							"<strong>Country: </strong>" + countries[res.iso_country] + "<br>" + 
+							"<strong>Elevation: </strong>" + Math.round(res.elevation_ft * 0.3048) + "m<br>" +
+							"<strong>IATA Code: </strong>" + res.iata_code + "<br>" +
+							"<a href=" + res.wikipedia_link + ">Wikipedia</a><br>" +
+							"<a href=" + res.home_link + ">Website</a>",	
+						"marker-symbol": "airport"
+					}
 				}
 			}
-			else if(res.type == "medium_airport") {
-				airports_medium[res.id] = res;
-				var contentString = createContent(res.id, airports_medium);
-				markers_medium[res.id] = new google.maps.Marker({
-					position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-					airport_id: res.id,
-					map: 		null
-				});
-				google.maps.event.addListener(markers_medium[res.id], "click", function() {
-				infowindow.open(map, markers_medium[res.id]);
-				});
-				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-				if (res.iata_code != "" && res.type != "heliport" && res.type != "closed"){
-				airports_simple[res.id] = res.name + " (" + res.iata_code + "), " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-				}
-				else {
-					airports_simple[res.id] = res.name + ", " + res.municipality + ", " + res.iso_country; // for autocomplete. save id as key.
-				}
-			}
-			else if(res.type == "large_airport") {
-				airports_large[res.id] = res;
-				var contentString = createContent(res.id, airports_large);
-				markers_large[res.id] = new google.maps.Marker({
-					position: 	new google.maps.LatLng(res.latitude_deg, res.longitude_deg),
-					airport_id: res.id,
-					map: 		null
-				});
-				google.maps.event.addListener(markers_large[res.id], "click", function() {
-				infowindow.open(map, markers_large[res.id]);
-				});
-				positions[res.id] = new google.maps.LatLng(res.latitude_deg, res.longitude_deg);
-				var autocomplete = "";
-				if(res.name) {
-					autocomplete += res.name;
-				}
-				if(res.iata_code){
-					autocomplete += " (" + res.iata_code + ")";
-				}
-				if(res.municipality) {
-					autocomplete += ", " + res.municipality;
-				}
+			
+			if(res.type === "small_airport") {
+				airports_small[res.id] = data;
+			} else if(res.type === "medium_airport") {
+				airports_medium[res.id] = data;
+			} else {
+				airports_large[res.id] = data;
 				
-				if(res.iso_country) {
-					autocomplete += ", " + countries[res.iso_country];
-				}
-
+				var autocomplete = "";
+				
+				if(res.name) autocomplete += res.name;
+				if(res.iata_code) autocomplete += " (" + res.iata_code + ")";
+				if(res.municipality) autocomplete += ", " + res.municipality;
+				if(res.iso_country) autocomplete += ", " + countries[res.iso_country];
+			
 				airports_simple[res.id] = autocomplete;
-
 			}
-			else {
-			//do nothing
-			}
-
-			var infowindow = new google.maps.InfoWindow({
-  				content: contentString,
-				});
-
-		});
+		})	
 	}).done(function() {
-		after = new Date().getTime();
-		console.log("Iterating done. Took: " + (after - before) + " ms");
 		setMode(3);
 		wasMode = null;
 		setMarkers();
-		setupHeatMap();
-		$( "#search_input" ).autocomplete({
+
+		/*$("#search_input").autocomplete({
 			source: _.values(airports_simple), //fill autocomplete with values of airports_simple
 			minLength: 3,
-			select: function( event, ui ) {
-				var selected = ui.item.value; //value of selected item
-				var airp_id = (_.invert(airports_simple))[selected]; //get id of that airport by inverting hash
-				if(airp_id in airports_small) {
-					panToMarker(airp_id, airports_small, markers_small);
-				}
-				else if (airp_id in airports_medium) {
-					panToMarker(airp_id, airports_medium, markers_medium);
-				}
-				else{
-					panToMarker(airp_id, airports_large, markers_large);
-				}
-			}
+			select: function( event, ui ) 
+					{
+						var selected = ui.item.value; //value of selected item
+						var airp_id = (_.invert(airports_simple))[selected]; //get id of that airport by inverting hash
+					}
 		});*/
-	});
-	});
-	
+	})
 }
 
 function removeMarkers() {
 	if(markersVisible == true) {
+		map.removeLayer(geojson);
+		geojson = [];
 
-		if(wasMode == 1) {
-			var markersToDelete = markers_small;
-		}
-		else if(wasMode == 2) {
-			var markersToDelete = markers_medium;
-		}
-		else if(wasMode == 3) {
-			var markersToDelete = markers_large;
-		}
-		for(var i in markersToDelete) {
-			markersToDelete[i].setMap(null);
-		}
 		$('#markers_count').html('0');
 	}
 }
 
 function setMarkers() {
-	before = new Date().getTime();
-	airports_count = 0;
 	$("#loader").css("display", "block");
 	removeMarkers();
-	if(currentMode != wasMode && map.getZoom() >= zoomLevel) {
-		var markers = getCurrentMarkers();
-		for(var i in markers) {
-			markers[i].setMap(map);
-			airports_count++;
+
+	if(currentMode != wasMode) {
+		var airports = getSelectedAirports();
+
+		for(var i in airports) {
+			geojson.push(airports[i].marker);
 		}
+
 		markersVisible = true;
 	}
-	else {
-		// The markers are already set or zoom is too low.
-	}
+
+	airports_count = geojson.length;
+	map.featureLayer.setGeoJSON(geojson);
+
 	$('#markers_count').html(airports_count);
 	$("#loader").css("display", "none");
-	after = new Date().getTime();
-	console.log("Setting Markers took: " + (after - before) + " ms");
-
-}
-
-function setupHeatMap() {
-	before = new Date().getTime();
-	heatmap = new google.maps.visualization.HeatmapLayer({
-    	data: new google.maps.MVCArray(positions),
-    	opacity: 0.8,
-    	radius: 33
-  	});
-	heatmap.setMap(map);
-	after = new Date().getTime();
-	console.log("Setting up HeatMap. Took: " + (after - before) + " ms");
-}
-
-function createContent(airportId, airports){
-	if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === true){ // Has no links
-		return 	'<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
-				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
-				'<strong>Country: </strong>' + countries[airports[airportId].iso_country] + '<br>' +
-				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet';
-	}else if((airports[airportId].wikipedia_link === "") === true && (airports[airportId].home_link === "") === false){ // Has just Website
-		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
-				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
-				'<strong>Country: </strong>' + countries[airports[airportId].iso_country] + '<br>' +
-				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
-				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>';
-	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === true){ // Has just Wikipedia link
-		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
-				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
-				'<strong>Country: </strong>' + countries[airports[airportId].iso_country] + '<br>' +
-				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
-				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
-				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
-	}else if((airports[airportId].wikipedia_link === "") === false && (airports[airportId].home_link === "") === false){ // Has both links
-		return '<strong>Airport: </strong>' + airports[airportId].name + '<br>' +
-				'<strong>City: </strong>' + airports[airportId].municipality + '<br>' +
-				'<strong>Country: </strong>' + countries[airports[airportId].iso_country] + '<br>' +
-				'<strong>Elevation: </strong>' + (airports[airportId].elevation_ft * 30.48 / 100).toFixed(1) + ' Meter,'+ '&#160;' + airports[airportId].elevation_ft + ' Feet' + '<br>' +
-				'<strong>IATA Code: </strong>' + airports[airportId].iata_code + '<br>' +
-				'<a target="_blank" href=' + airports[airportId].home_link + '>' + "Website" + '</a>' + '<br>' +
-				'<a target="_blank" href=' + airports[airportId].wikipedia_link + '>' + "Wikipedia Link" + '</a>';
-	}
-}
-
-function panToMarker(airp_id, airports_array, markers_array) {
-	before = new Date().getTime();
-	var lati = airports_array[airp_id].latitude_deg;
-	var longi = airports_array[airp_id].longitude_deg;
-	var airp_marker = markers_array[airp_id];
-	airp_marker.setMap(map); // in case marker isn't visible at the moment
-	markers_array.push(airp_marker);
-	airp_marker.setAnimation(google.maps.Animation.BOUNCE);
-	map.panTo(new google.maps.LatLng(lati, longi));
-	after = new Date().getTime();
-	console.log("Panning took: " + (after - before) + " ms")
-	setTimeout(function(){airp_marker.setAnimation(null)}, 2000);
 }
 
 function setMode(value) {
@@ -290,27 +142,23 @@ function setMode(value) {
 		$('#airport_feedback').html('Medium Airports');
 		zoomLevel = 5;
 	}
-	else if(value == 3) {
+	else {
 		$('#toggle_large').addClass('active');
 		$('#airport_feedback').html('Large Airports');
 		zoomLevel = 4;
 	}
-	if(map.getZoom() < zoomLevel) {
-		$('#markers_feedback').html('Off');
-		$('#markers_feedback').css('background-color', '#FF8000');
-	}
 }
 
-function getCurrentMarkers() {
-	var markers;
+function getSelectedAirports() {
+	var data;
 	if(currentMode == 1) {
-		markers = markers_small;
+		data = airports_small;
 	}
 	else if(currentMode == 2){
-		markers = markers_medium;
+		data = airports_medium;
 	}
 	else {
-		markers = markers_large;
+		data = airports_large;
 	}
-	return markers;
+	return data;
 }
