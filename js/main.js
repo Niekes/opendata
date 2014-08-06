@@ -86,31 +86,40 @@ function setupData() {
 				airports_medium[res.id] = data;
 			} else {
 				airports_large[res.id] = data;
-				
-				var autocomplete = "";
-				
-				if(res.name) autocomplete += res.name;
-				if(res.iata_code) autocomplete += " (" + res.iata_code + ")";
-				if(res.municipality) autocomplete += ", " + res.municipality;
-				if(res.iso_country) autocomplete += ", " + countries[res.iso_country];
-			
-				airports_simple[res.id] = autocomplete;
 			}
+			var autocomplete = "";
+				
+			if(res.name) autocomplete += res.name;
+			if(res.iata_code) autocomplete += " (" + res.iata_code + ")";
+			if(res.municipality) autocomplete += ", " + res.municipality;
+			if(res.iso_country) autocomplete += ", " + countries[res.iso_country];
+		
+			airports_simple[res.id] = autocomplete;
 		})	
 	}).done(function() {
 		setMode(3);
 		wasMode = null;
 		setMarkers();
 
-		/*$("#search_input").autocomplete({
+		$("#search_input").autocomplete({
 			source: _.values(airports_simple), //fill autocomplete with values of airports_simple
 			minLength: 3,
 			select: function( event, ui ) 
 					{
 						var selected = ui.item.value; //value of selected item
 						var airp_id = (_.invert(airports_simple))[selected]; //get id of that airport by inverting hash
+						if(airp_id in airports_small) {
+		 					panToMarker(airp_id, airports_small);
+		 				}
+		 				else if (airp_id in airports_medium) {
+		 					panToMarker(airp_id, airports_medium);
+		 				}
+		 				else{
+		 					panToMarker(airp_id, airports_large);
+		 				}
 					}
-		});*/
+					
+		});
 	})
 }
 
@@ -178,3 +187,17 @@ function getSelectedAirports() {
 	}
 	return data;
 }
+
+function panToMarker(airp_id, airports_array) {
+	var lati = airports_array[airp_id].marker.geometry.coordinates[0];
+	var longi = airports_array[airp_id].marker.geometry.coordinates[1];
+
+	map.panTo(new L.LatLng(longi, lati));
+	
+	
+	airports_count = geojson.length;
+	map.featureLayer.setGeoJSON(geojson);
+
+	$('#markers_count').html(airports_count);
+	$("#loader").css("display", "none");
+ }
