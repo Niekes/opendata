@@ -183,5 +183,5 @@ function panToMarker(airp_id, airports_array) {
 	var lati = airports_array[airp_id].marker._latlng.lat;
 	var longi = airports_array[airp_id].marker._latlng.lng;
 	map.panTo(new L.LatLng(lati, longi));
-	map.setZoom(12);
+	map.setZoom(10);
  }
