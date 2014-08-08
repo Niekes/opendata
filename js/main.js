@@ -2,7 +2,8 @@ var map;
 var token;
 var airports_simple = [];
 var markersVisible = false;
-var geojson = [];
+var viewedMarkers = [];
+var markers;
 
 var airports_small = [];
 var airports_medium = [];
@@ -28,20 +29,6 @@ $(function() {
 		hideStats()
 	});
 
-	map.on("zoomend", function() {
-		if(map.getZoom() > 4) {
-			map.featureLayer.setFilter(function() {
-				$('#markers_count').html(airports_count);
-				return true;
-			});
-		} else {
-			map.featureLayer.setFilter(function() {
-				$('#markers_count').html('0');
-				return false;
-			});
-		}
-	})
-
 	setupData();
 
 });
@@ -62,24 +49,20 @@ function setupData() {
 			//create airport object
 			var data = {
 				airport: res,
-				marker: {
-					type: "Feature",
-					geometry: {
-						type: "Point",
-						coordinates: [res.longitude_deg, res.latitude_deg]
-					},
-					properties: {
-						title: res.name,
-						description: 
-							"<strong>City: </strong>" + res.municipality + "<br>" +
-							"<strong>Country: </strong>" + countries[res.iso_country] + "<br>" + 
-							"<strong>Elevation: </strong>" + Math.round(res.elevation_ft * 0.3048) + "m<br>" +
-							"<strong>IATA Code: </strong>" + res.iata_code + "<br>" +
-							"<a href=" + res.wikipedia_link + ">Wikipedia</a><br>" +
-							"<a href=" + res.home_link + ">Website</a>",	
+				marker: L.marker([res.latitude_deg, res.longitude_deg], {
+					icon: L.mapbox.marker.icon({
+						"marker-size": "medium",
 						"marker-symbol": "airport"
-					}
-				}
+					})
+				}).bindPopup(
+					"<strong>" + res.name + "</strong><br>" +
+					"<strong>City: </strong>" + res.municipality + "<br>" +
+					"<strong>Country: </strong>" + countries[res.iso_country] + "<br>" + 
+					"<strong>Elevation: </strong>" + Math.round(res.elevation_ft * 0.3048) + "m<br>" +
+					"<strong>IATA Code: </strong>" + res.iata_code + "<br>" +
+					"<a href=" + res.wikipedia_link + ">Wikipedia</a><br>" +
+					"<a href=" + res.home_link + ">Website</a>"
+				)
 			}
 			
 			if(res.type === "small_airport") {
@@ -122,13 +105,13 @@ function setupData() {
 					}
 					
 		});
-	})
+	});
 }
 
 function removeMarkers() {
 	if(markersVisible == true && wasMode != currentMode) {
-		map.removeLayer(geojson);
-		geojson = [];
+		map.removeLayer(markers);
+		viewedMarkers = [];
 
 		$('#markers_count').html('0');
 		markersVisible = false;
@@ -143,19 +126,23 @@ function setMarkers() {
 		var airports = getSelectedAirports();
 
 		for(var i in airports) {
-			geojson.push(airports[i].marker);
+			viewedMarkers.push(airports[i].marker);
 		}
 
 		markersVisible = true;
 	}
-	airports_count = geojson.length;
-	map.featureLayer.setGeoJSON(geojson);
-	if(map.getZoom() > 4) {
-		$('#markers_count').html(airports_count);
-	}
-	else {
-		$('#markers_count').html("0");
-	}
+
+	airports_count = viewedMarkers.length;
+	//map.featureLayer.setviewedMarkers(viewedMarkers);
+	$('#markers_count').html(airports_count);
+
+	markers = new L.MarkerClusterGroup();
+
+    $.each(viewedMarkers, function(key, res) {
+    	markers.addLayer(res);
+    })
+        
+    map.addLayer(markers);
 	
 	$("#loader").css("display", "none");
 }
@@ -167,17 +154,14 @@ function setMode(value) {
 	if(value == 1) {
 		$('#toggle_small').addClass('active');
 		$('#airport_feedback').html('Small Airports');
-		zoomLevel = 6;
 	}
 	else if(value == 2) {
 		$('#toggle_medium').addClass('active');
 		$('#airport_feedback').html('Medium Airports');
-		zoomLevel = 5;
 	}
 	else {
 		$('#toggle_large').addClass('active');
 		$('#airport_feedback').html('Large Airports');
-		zoomLevel = 4;
 	}
 }
 
@@ -196,7 +180,8 @@ function getSelectedAirports() {
 }
 
 function panToMarker(airp_id, airports_array) {
-	var lati = airports_array[airp_id].marker.geometry.coordinates[0];
-	var longi = airports_array[airp_id].marker.geometry.coordinates[1];
-	map.panTo(new L.LatLng(longi, lati));
+	var lati = airports_array[airp_id].marker._latlng.lat;
+	var longi = airports_array[airp_id].marker._latlng.lng;
+	map.panTo(new L.LatLng(lati, longi));
+	map.setZoom(12);
  }
